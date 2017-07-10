@@ -1,0 +1,8 @@
+{
+  "name": "chat-service",
+  "description": "chat server for using as external service",
+  "version": "0.1.0",
+  "dependencies": {
+    "ws": "^3.0.0"
+  }
+}

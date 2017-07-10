@@ -1,0 +1,18 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+    <script>
+        const ws = new WebSocket("ws://localhost:8081/chat");
+        ws.on('message', function(msg){
+            console.log("<= " + msg);
+        });
+        ws.on("open", function(){
+            console.log("Socket opend");
+            ws.send("test");
+        });
+
+    </script>
+    </body>
+</html>
