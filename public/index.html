@@ -1,17 +1,11 @@
 <html>
     <head>
-
+        <meta charset="utf-8"/>
+        <title>Chat Example</title>
+        <script src="chat-client.js" async></script>
     </head>
     <body>
     <script>
-        const ws = new WebSocket("ws://localhost:8081/chat");
-        ws.on('message', function(msg){
-            console.log("<= " + msg);
-        });
-        ws.on("open", function(){
-            console.log("Socket opend");
-            ws.send("test");
-        });
 
     </script>
     </body>

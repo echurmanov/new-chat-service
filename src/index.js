@@ -1,34 +1,30 @@
 const ChatServer = require("./chat-server.js");
 const httpServer = require("http").createServer();
-const port = 8081;
+const ChatModel = require('./chat-model.js');
+const chat = new ChatModel(
+  {
+    "connectionLimit": 20,
+    "host": "127.0.0.1",
+    "user": "root",
+    "password": "root",
+    "database": "chat"
+  }
+);
+const port = 3011;
+const chatServer = new ChatServer(chat, httpServer);
+
 httpServer.listen(port);
 httpServer.on('listening', function(){
-  console.log("HTTP-Server start at port " + port);
-  const chat = new ChatServer(httpServer, '/chat');
+  console.log("Start HTTP server at " + port);
 });
+
 
 httpServer.on('request', function(req, res){
-  console.log(req.url);
-  console.log("HTTP-request");
-  res.write(`<html>
-    <head>
-
-    </head>
-    <body>
-    <script>
-        var ws = new WebSocket("ws://localhost:8081/chat");
-        console.log(ws);
-        ws.addEventListener('message', function(msg){
-            console.log("<= ", msg);
-        });
-        ws.addEventListener("open", function(){
-            console.log("Socket opend");
-            ws.send("test");
-        });
-
-    </script>
-    </body>
-</html>`);
+  res.setHeader('Content-Type', 'text/json;charset=utf-8');
+  res.write("{}");
   res.end();
 });
+
+
+
 

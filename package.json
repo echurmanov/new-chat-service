@@ -3,6 +3,8 @@
   "description": "chat server for using as external service",
   "version": "0.1.0",
   "dependencies": {
+    "mysql": "^2.13.0",
+    "mysql-utilities": "^1.0.10",
     "ws": "^3.0.0"
   }
 }
