@@ -20,6 +20,7 @@ CREATE TABLE `chat_messages` (
 CREATE TABLE `chat_user_private_rooms_access` (
   `chatUserId` varchar(36) NOT NULL DEFAULT '',
   `chatRoomId` varchar(36) NOT NULL DEFAULT '',
+  `userRole` varchar(128) NOT NULL DEFAULT '',
   PRIMARY KEY (`chatUserId`,`chatRoomId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -30,7 +31,7 @@ CREATE TABLE `chat_user_private_rooms_access` (
   `userName` varchar(512) DEFAULT NULL,
   `createDate` datetime DEFAULT NULL,
   `lastVisit` datetime DEFAULT NULL,
-  `clietServiceUserLink` text,
+  `clientUserData` text,
   PRIMARY KEY (`chatUserId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -5,6 +5,7 @@
   "dependencies": {
     "mysql": "^2.13.0",
     "mysql-utilities": "^1.0.10",
+    "uuid": "^3.1.0",
     "ws": "^3.0.0"
   }
 }
