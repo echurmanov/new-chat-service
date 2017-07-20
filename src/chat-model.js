@@ -58,9 +58,10 @@ class ChatModel {
       clientUser.clientUserData = (typeof query.userData !== 'undefined')?query.userData:null;
       await clientUser.updateDbRecord();
     } else {
-      clientUser.updateVisitDate(new Date()).then(()=>{}).catch((err) => {
-        console.log("Error on update visit time for user \""+clientUser.chatUserId+"\"");
-      });
+      clientUser.userName = query.userName;
+      clientUser.lastVisit = new Date();
+      clientUser.clientUserData = (typeof query.userData !== 'undefined')?query.userData:null;
+      clientUser.updateDbRecord();
     }
 
     return clientUser;

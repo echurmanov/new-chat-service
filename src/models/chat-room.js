@@ -6,7 +6,7 @@ const TABLE_NAME_CHAT_ROOMS = 'chat_rooms';
 const TABLE_NAME_CHAT_ROOM_USER_ACCESS = 'chat_user_private_rooms_access';
 
 /**
- * Ìîäåëü êîìíàòû ÷àòà
+ * ÐœÐ¾Ð´ÐµÐ»ÑŒ ÐºÐ¾Ð¼Ð½Ð°Ñ‚Ñ‹ Ñ‡Ð°Ñ‚Ð°
  *
  */
 class ChatRoom {
@@ -21,7 +21,7 @@ class ChatRoom {
 
 
   /**
-   * Ïîëó÷àåì ñïñèîê ïóáëè÷íûõ êîìíàò êëèåíòà
+   * ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ ÑÐ¿ÑÐ¸Ð¾Ðº Ð¿ÑƒÐ±Ð»Ð¸Ñ‡Ð½Ñ‹Ñ… ÐºÐ¾Ð¼Ð½Ð°Ñ‚ ÐºÐ»Ð¸ÐµÐ½Ñ‚Ð°
    *
    * @param clientId
    * @returns {Promise}
@@ -74,15 +74,15 @@ class ChatRoom {
             TABLE_NAME_CHAT_ROOMS,
             " c LEFT JOIN ",
             TABLE_NAME_CHAT_ROOM_USER_ACCESS,
-            " ca ON (c.chatRoomId = ca.chatRoomId AND ca.chatUserId = :chatUserId) ",
-            " WHERE c.serviceClientId = :serviceClientId AND (c.chatRoomType = :typePublic OR ca.chatRoomId is NOT NULL)",
+            " ca ON (c.chatRoomId = ca.chatRoomId AND ca.chatUserId = ?) ",
+            " WHERE c.serviceClientId = ? AND (c.chatRoomType = ? OR ca.chatRoomId is NOT NULL)",
             " ORDER BY c.chatRoomTitle"
           ].join(""),
-          {
-            chatUserId: client.chatUserId,
-            serviceClientId: client.serviceClientId,
-            typePublic: TYPE_PUBLIC
-          }
+          [
+            client.chatUserId,
+            client.serviceClientId,
+            TYPE_PUBLIC
+          ]
         );
         conn.query(sql, (err, result) => {
           conn.release();

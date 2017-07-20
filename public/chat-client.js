@@ -1,13 +1,18 @@
 (function(){
   window.onload = function(){
     console.log("Loaded");
-    const ws = new WebSocket("ws://localhost:8085/client01?userId=123&userData={a:3}&userName=CrazyNiger&sign=b0ba430b4789310f64217759ab35d4e5f6f1ada2a032a7bbb4bd871ec93d96c3");
+    const ws = new WebSocket("ws://localhost:8085/client01?userId=123&userData={a:3,+b:5}&userName=CrazyNiger&sign=b4df4d7d7afca37d3fa22f171ac5bef599882e2644cfc65a9e72c37ec5a44647");
     ws.addEventListener('message', function(msg){
       console.log("<= ", msg);
     });
     ws.addEventListener("open", function(){
       console.log("Socket opened");
-      ws.send("test");
+      const message = {
+        "type": "message",
+        "room": "49ab45dd-6c7d-11e7-b98f-0800278f16ef",
+        "text": "Всем привет от Нигера"
+      };
+      ws.send(JSON.stringify(message));
     });
   };
 

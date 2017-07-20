@@ -9,6 +9,48 @@ function heartbeat() {
 }
 
 
+const chatRoomsSockets = {};
+const chatRoomsUsers = {};
+
+function removeSocketFromRooms(chatRoomModel, ws) {
+  chatRoomModel.getRoomsForClient(ws._chatUser).then((rooms)=>{
+    rooms.map((room, arr) => {
+      if (typeof chatRoomsSockets[room.chatRoomId] !== 'undefined' && chatRoomsSockets[room.chatRoomId].includes(ws)) {
+        chatRoomsSockets[room.chatRoomId].splice(chatRoomsSockets[room.chatRoomId].indexOf(ws),1);
+      }
+    });
+  }).catch((err) => {
+    console.log("Error on get rooms", err);
+  });
+}
+
+
+const sendMessageDefaultOptions = {
+  compress: true,
+  binary: false
+};
+
+function broadcastRoom(roomId, message, user) {
+  const data = {
+    type: "message",
+    text: message,
+    userInfo: {
+      userName: user.userName,
+      clientUserId: user.serviceClientUserId,
+      chatUserId: user.chatUserId,
+      userData: user.clientUserData
+    }
+  };
+  if (typeof chatRoomsSockets[roomId] !== 'undefined') {
+    chatRoomsSockets[roomId].forEach((ws) => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify(data), sendMessageDefaultOptions);
+      }
+    })
+  }
+}
+
+
 class ChatWsServer
 {
   constructor(chatModel, listen, path)
@@ -51,14 +93,16 @@ class ChatWsServer
     ws._chatUser = req._chatUser;
 
     const chatRoomModel = new ChatRoom(this.chat.dbPool);
-    chatRoomModel.getPublicClientRooms(ws._chatUser.serviceClientId).then((rooms)=>{
-      console.log("Public chat rooms", rooms);
-    }).catch((err) => {
-      console.log("Error on get rooms", err);
-    });
 
     chatRoomModel.getRoomsForClient(ws._chatUser).then((rooms)=>{
-      console.log("All client rooms", rooms);
+      rooms.map((room, arr) => {
+        if (typeof chatRoomsSockets[room.chatRoomId] === 'undefined') {
+          chatRoomsSockets[room.chatRoomId] = [];
+        }
+        if (!chatRoomsSockets[room.chatRoomId].includes(ws)) {
+          chatRoomsSockets[room.chatRoomId].push(ws);
+        }
+      });
     }).catch((err) => {
       console.log("Error on get rooms", err);
     });
@@ -66,15 +110,34 @@ class ChatWsServer
 
     ws.on('pong', heartbeat);
     ws.on('close', (code, reason) => {
+      removeSocketFromRooms(chatRoomModel, ws);
       console.log("WebSocket Closed", code, reason);
     });
 
     ws.on('error', (err) => {
+      removeSocketFromRooms(chatRoomModel, ws);
       console.log("WebSocket Error", err);
     });
 
     ws.on('unexpected-response', () => {
       console.log("WebSocket unexpected-response");
+    });
+
+    ws.on('message', (data) => {
+      try {
+        const message = JSON.parse(data);
+        if (typeof message.type !== 'undefined') {
+          switch (message.type) {
+            case 'message':
+              if (typeof message.room !== 'undefined' && message.text !== 'undefined') {
+                broadcastRoom(message.room, message.text, ws._chatUser);
+              }
+              break;
+          }
+        }
+      } catch (e) {
+
+      }
     });
   }
 
