@@ -94,6 +94,9 @@ class ChatWsServer
 
     const chatRoomModel = new ChatRoom(this.chat.dbPool);
 
+
+    const chatRoomList = {};
+
     chatRoomModel.getRoomsForClient(ws._chatUser).then((rooms)=>{
       rooms.map((room, arr) => {
         if (typeof chatRoomsSockets[room.chatRoomId] === 'undefined') {
@@ -102,10 +105,19 @@ class ChatWsServer
         if (!chatRoomsSockets[room.chatRoomId].includes(ws)) {
           chatRoomsSockets[room.chatRoomId].push(ws);
         }
+        chatRoomList[room.chatRoomId] = {
+          "title": room.chatRoomTitle,
+          "type": room.chatRoomType
+        };
       });
+      ws.send(JSON.stringify({
+        "type": "room-list",
+        "rooms": chatRoomList
+      }));
     }).catch((err) => {
       console.log("Error on get rooms", err);
     });
+
 
 
     ws.on('pong', heartbeat);
