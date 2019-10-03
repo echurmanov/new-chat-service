@@ -5,6 +5,11 @@ const TYPE_PRIVATE = 'private';
 const TABLE_NAME_CHAT_ROOMS = 'chat_rooms';
 const TABLE_NAME_CHAT_ROOM_USER_ACCESS = 'chat_user_private_rooms_access';
 
+const ROLE_OWNER = "owner";
+const ROLE_ADMIN = "admin";
+const ROLE_USER = "user";
+const ROLE_SPECTR = "specter";
+
 /**
  * Модель комнаты чата
  *

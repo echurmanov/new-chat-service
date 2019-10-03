@@ -41,6 +41,8 @@ function broadcastRoom(roomId, message, user) {
       userData: user.clientUserData
     }
   };
+
+
   if (typeof chatRoomsSockets[roomId] !== 'undefined') {
     chatRoomsSockets[roomId].forEach((ws) => {
       if (ws.readyState === WebSocket.OPEN) {
@@ -93,8 +95,6 @@ class ChatWsServer
     ws._chatUser = req._chatUser;
 
     const chatRoomModel = new ChatRoom(this.chat.dbPool);
-
-
     const chatRoomList = {};
 
     chatRoomModel.getRoomsForClient(ws._chatUser).then((rooms)=>{
@@ -155,7 +155,7 @@ class ChatWsServer
 
   async validateClient(info, cb) {
     const urlInfo = url.parse(info.req.url);
-    const clientName = urlInfo.pathname.substr(1);
+    const clientName = urlInfo.pathname.substr(1).replace(/chat\//, "");
     const client = await this.chat.checkClientExists(clientName);
     if (client) {
       try {

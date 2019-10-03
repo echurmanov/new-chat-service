@@ -5,8 +5,8 @@ const chat = new ChatModel(
   {
     "connectionLimit": 20,
     "host": "127.0.0.1",
-    "user": "root",
-    "password": "root",
+    "user": "chat",
+    "password": "chat",
     "database": "chat"
   }
 );

@@ -19,7 +19,7 @@ class ClientUser {
 
 
   /**
-   * Поиск пользователя в базе по ID в системе клиента
+   *
    *
    * @param clientId
    * @param clientUserId
@@ -79,7 +79,7 @@ class ClientUser {
 
 
   /**
-   * Поиск пользователя в базе по ChatUserID
+   *  ChatUserID
    *
    * @param clientId
    * @param clientUserId
@@ -136,7 +136,7 @@ class ClientUser {
   }
 
   /**
-   * Обновленена дата последнего визита пользователя
+   *
    *
    * @param newDate
    * @returns {Promise}
@@ -168,7 +168,7 @@ class ClientUser {
   }
 
   /**
-   * Обновление данных пользователя в БД
+   *
    *
    * @returns {Promise}
    */
