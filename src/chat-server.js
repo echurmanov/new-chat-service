@@ -1,3 +1,4 @@
+const uuid = require('uuid/v4');
 const WebSocket = require('ws');
 const httpServer = require('http').Server;
 const url = require('url');
@@ -30,10 +31,12 @@ const sendMessageDefaultOptions = {
   binary: false
 };
 
-function broadcastRoom(roomId, message, user) {
+function broadcastRoom(roomId, messageId, text, user) {
   const data = {
     type: "message",
-    text: message,
+    text: text,
+    room: roomId,
+    messageId: messageId,
     userInfo: {
       userName: user.userName,
       clientUserId: user.serviceClientUserId,
@@ -138,11 +141,13 @@ class ChatWsServer
     ws.on('message', (data) => {
       try {
         const message = JSON.parse(data);
+        console.log("Message", message);
         if (typeof message.type !== 'undefined') {
           switch (message.type) {
             case 'message':
-              if (typeof message.room !== 'undefined' && message.text !== 'undefined') {
-                broadcastRoom(message.room, message.text, ws._chatUser);
+              if (typeof message.room !== 'undefined' && message.text !== 'undefined' && message.text !== '') {
+                const messageId = uuid();
+                broadcastRoom(message.room, messageId, message.text, ws._chatUser);
               }
               break;
           }

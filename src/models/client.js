@@ -83,7 +83,6 @@ class Client {
     hash.update(checkString);
     const rightSign = hash.digest('hex');
 
-    console.log(rightSign);
     if (rightSign != query.sign) {
       const err  = new Error("Wrong sign");
       err.code = 1001;
